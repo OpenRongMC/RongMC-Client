@@ -25,6 +25,27 @@ The overlay supports chapters, previous and next controls, pause, resume, skip a
 
 Use `/rongmctour demo` as an administrator in a single-player creative world with commands enabled. For multiplayer, install the mod and matching Fabric API on both sides. Start with the [sample configuration](./examples/rongmc-tour-server.json), set the real scene coordinates, then configure `config/rongmc-tour-server.json`. The generated server configuration starts with automatic tours disabled.
 
+## Configure a server tour
+
+The first server launch creates `config/rongmc-tour-server.json`. Fill in the actual scene coordinates before enabling the tour.
+
+- `enabled` controls whether a configured tour can run.
+- `autoStartOnFirstJoin` starts the current tour for eligible clients that have yet to complete it. Leave it disabled while players are still in an authentication flow.
+- `maxConcurrent` defaults to 2 and can be set from 1 to 8.
+- `tour.version` lets players see an updated tour after completing an older version.
+- `tour.chapters` defines chapter IDs, text, dimensions, player anchors and camera keyframes. An anchor uses the player’s feet position and a keyframe uses the camera’s eye position. Start each timeline at 0 seconds and keep subsequent times increasing.
+
+The tour supports up to 16 chapters and 128 total keyframes, with up to 180 seconds per chapter and 900 seconds overall. Coordinates must remain inside the world border. FOV is 30–100 degrees and pitch is −85 to 85 degrees. When a chapter moves across the map, the client shows a loading overlay while the server sends the relevant chunks.
+
+| Command | Purpose |
+| --- | --- |
+| `/rongmctour` | Play the configured tour again |
+| `/rongmctour reload` | Validate and reload configuration (administrator) |
+| `/rongmctour status` | Inspect active sessions and recovery state (administrator) |
+| `/rongmctour demo` | Run the local single-player demo |
+
+Configuration failures keep the last valid settings in effect. Each world stores completion and interruption recovery in `rongmc-tour-state.json`.
+
 ## Building
 
 Use JDK 25. Run `./gradlew build` for the archive, or `./gradlew runClient` to open a development client. See [LICENSE](./LICENSE) for project licensing.
