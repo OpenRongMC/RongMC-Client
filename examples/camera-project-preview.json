@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "name": "RongMC · 测试展亭运镜",
+  "chapters": [
+    {
+      "id": "chapter_1",
+      "title": "测试展亭 · 运镜示例",
+      "description": "这是独立测试存档中的示例路线，使用 ReplayStudio 曲线实时渲染。你可以继续添加机位、修改时间和 FOV，再导出为服务器欢迎导览。",
+      "dimension": "minecraft:overworld",
+      "anchor": {
+        "x": 14.0,
+        "y": -52.0,
+        "z": 18.0
+      },
+      "keyframes": [
+        {
+          "seconds": 0.0,
+          "x": 14.0,
+          "y": -50.38000011444092,
+          "z": 18.0,
+          "yaw": 145.0,
+          "pitch": 18.0,
+          "fov": 70.0
+        },
+        {
+          "seconds": 5.0,
+          "x": -4.0,
+          "y": -52.38000011444092,
+          "z": 20.0,
+          "yaw": 190.0,
+          "pitch": 15.0,
+          "fov": 70.0
+        },
+        {
+          "seconds": 12.5,
+          "x": -6.0,
+          "y": -51.38000011444092,
+          "z": 12.0,
+          "yaw": 210.0,
+          "pitch": 20.0,
+          "fov": 62.0
+        }
+      ],
+      "interpolation": "catmull_rom"
+    }
+  ]
+}

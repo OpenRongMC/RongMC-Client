@@ -1,0 +1,5 @@
+RongMC uses a pathing-only subset of ReplayStudio, the pathing system used by ReplayMod.
+Upstream: https://github.com/ReplayMod/ReplayStudio/tree/a2e312635cd305d0dd57218b810c6088b59c18b0
+ReplayStudio is licensed under LGPL-3.0-or-later.
+Its library JAR is packaged separately under META-INF/jars, with original license notices, a corresponding source ZIP and build scripts included.
+Only the package/import namespace is isolated at build time; the original algorithm source is preserved. See the embedded library NOTICE and COPYING.LESSER.

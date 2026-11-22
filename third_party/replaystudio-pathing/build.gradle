@@ -1,0 +1,45 @@
+plugins { id 'java-library' }
+
+group = 'dev.rongmc.thirdparty'
+version = '0.0.0-a2e3126-rongmc2'
+repositories { mavenCentral() }
+dependencies {
+    api 'com.google.code.gson:gson:2.13.2'
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
+}
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
+// Keep the vendored upstream source byte-for-byte intact. Isolate its Java namespace at build time.
+def isolatedDirectory = layout.buildDirectory.dir('isolated-sources')
+def isolateSources = tasks.register('isolateSources', Sync) {
+    from('src/main/java') {
+        filter { String line -> line.replace('com.replaymod.replaystudio', 'dev.rongmc.thirdparty.replaystudio') }
+        eachFile { path = path.replace('com/replaymod/replaystudio', 'dev/rongmc/thirdparty/replaystudio') }
+        includeEmptyDirs = false
+    }
+    into isolatedDirectory
+}
+sourceSets.main.java.setSrcDirs([isolatedDirectory])
+sourceSets.main.java.destinationDirectory.set(layout.buildDirectory.dir('classes/java/isolatedMain'))
+tasks.compileJava {
+    dependsOn isolateSources
+}
+tasks.sourcesJar { dependsOn isolateSources }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+def correspondingSources = tasks.register('correspondingSources', Zip) {
+    archiveFileName = 'replaystudio-pathing-sources.zip'
+    destinationDirectory = layout.buildDirectory.dir('corresponding-source')
+    from('src') { into 'src' }
+    from('build.gradle', 'settings.gradle', 'COPYING', 'COPYING.LESSER', 'LICENSE.legacy', 'NOTICE', 'UPSTREAM.json', 'RELINKING.md')
+}
+tasks.jar {
+    from(['COPYING', 'COPYING.LESSER', 'LICENSE.legacy', 'NOTICE', 'UPSTREAM.json', 'RELINKING.md']) { into 'META-INF/licenses/replaystudio' }
+    from(correspondingSources) { into 'META-INF' }
+    manifest.attributes('Implementation-Title': 'ReplayStudio pathing subset for RongMC', 'Implementation-Version': project.version)
+}

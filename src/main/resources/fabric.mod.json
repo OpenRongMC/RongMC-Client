@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "rongmc_client",
+  "version": "${version}",
+  "name": "RongMC Client",
+  "description": "RongMC 实时世界欢迎导览：相机路线、交互介绍与自适应画质，含服务端配套逻辑。",
+  "authors": [
+    "RongMC"
+  ],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.rongmc.tour.RongMcTour"
+    ],
+    "client": [
+      "dev.rongmc.client.RongMcClient"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "rongmc-client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "license": "GPL-3.0"
+}

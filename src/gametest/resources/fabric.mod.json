@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "rongmc-tour-test",
+  "version": "1.0.0",
+  "name": "RongMC tour isolated game tests",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": [
+      "dev.rongmc.test.CameraEditorGameTest",
+      "dev.rongmc.test.TourGameTest"
+    ]
+  },
+  "depends": {
+    "rongmc_client": "*"
+  },
+  "license": "GPL-3.0"
+}

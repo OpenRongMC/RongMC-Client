@@ -1,0 +1,9 @@
+ReplayStudio pathing subset
+Source: https://github.com/ReplayMod/ReplayStudio/tree/a2e312635cd305d0dd57218b810c6088b59c18b0
+License: GNU Lesser General Public License, version 3 or later.
+Original Java source headers and COPYING / COPYING.LESSER / LICENSE.legacy are preserved.
+This RongMC build selects only the pathing core, with an independent Gradle build; it is not an official ReplayStudio binary.
+The vendored upstream Java source files have not been edited. During compilation only their package/import namespace is rewritten to dev.rongmc.thirdparty.replaystudio, as implemented in build.gradle. This namespace isolation is a RongMC build modification, not an upstream change.
+A corresponding source archive, build scripts and provenance are included inside this library JAR at META-INF/replaystudio-pathing-sources.zip.
+This library is packaged as a separate, replaceable nested JAR; it is not shaded into the application classes. Its isolated namespace remains wholly inside that replaceable library JAR.
+See RELINKING.md for rebuilding/replacing this LGPL component, including retention of Fabric Loom-generated nested metadata.

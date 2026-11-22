@@ -1,0 +1,22 @@
+{
+  "enabled": false,
+  "autoStartOnFirstJoin": true,
+  "maxConcurrent": 2,
+  "tour": {
+    "version": 1,
+    "name": "RongMC · 欢迎导览",
+    "chapters": [
+      {
+        "id": "welcome",
+        "title": "欢迎来到 RongMC",
+        "description": "这是配置格式示例，请按实际场景填写路线与介绍。示例坐标不代表服务器内的建筑位置。",
+        "dimension": "minecraft:overworld",
+        "anchor": {"x": 0, "y": 80, "z": 0},
+        "keyframes": [
+          {"seconds": 0, "x": 14, "y": 89, "z": 18, "yaw": 145, "pitch": 18, "fov": 66},
+          {"seconds": 18, "x": -4, "y": 87, "z": 20, "yaw": 190, "pitch": 15, "fov": 60}
+        ]
+      }
+    ]
+  }
+}

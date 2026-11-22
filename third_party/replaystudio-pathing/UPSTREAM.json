@@ -1,0 +1,28 @@
+{
+  "repository": "https://github.com/ReplayMod/ReplayStudio",
+  "commit": "a2e312635cd305d0dd57218b810c6088b59c18b0",
+  "license": "LGPL-3.0-or-later",
+  "notes": "Pathing-only subset. Vendored upstream Java files remain byte-identical. The independent build rewrites only the Java package/import namespace to dev.rongmc.thirdparty.replaystudio to avoid collisions with full ReplayMod.",
+  "sha256": {
+    "com/replaymod/replaystudio/pathing/change/Change.java": "2318987662823f029e0a42955a7b4ca0a82345432adc13a86dbc6d568d6aedc0",
+    "com/replaymod/replaystudio/pathing/impl/KeyframeImpl.java": "690e672b8ff0588f4939aadf650f50d41dda2d47b4be3fb6138174a8a1145630",
+    "com/replaymod/replaystudio/pathing/impl/PathImpl.java": "079685251484da0e2b6733cb38a72b17049577357ecf4f778e4dbc841f590407",
+    "com/replaymod/replaystudio/pathing/impl/PathSegmentImpl.java": "7855342bcaa4852f6b53aef2382469657c7452fe8dba5a23961477b43c809567",
+    "com/replaymod/replaystudio/pathing/impl/TimelineImpl.java": "88c66dd4d9ccb3ecf591d4d1cd6467f698fbf057453f00f14b9cb42674f595d6",
+    "com/replaymod/replaystudio/pathing/interpolation/AbstractInterpolator.java": "e4d02960f4e6187c10b419e5cc5037ed993cead1bd27cca670168de12270654e",
+    "com/replaymod/replaystudio/pathing/interpolation/CatmullRomSplineInterpolator.java": "d9d32391f8fb15322b6f555aa96453881f6694229ee927050ae3888453f9cb92",
+    "com/replaymod/replaystudio/pathing/interpolation/CubicSplineInterpolator.java": "c2da4369e5d1f331d9f54163fc1d9e0c7884b396ed772e756f6686659beaa283",
+    "com/replaymod/replaystudio/pathing/interpolation/InterpolationParameters.java": "a4a1e8e49e82f6730ff51bbd3811188ba4d31cf2176c563a0e28f0a7b010bf81",
+    "com/replaymod/replaystudio/pathing/interpolation/Interpolator.java": "4194841264827c9d6728f42f73f0fe051c121f92c089db99d95fdc1f5e267408",
+    "com/replaymod/replaystudio/pathing/interpolation/LinearInterpolator.java": "b2ee9e54d1ca615eda0fe6e2f4404609e5eb8f61d2027144b63d562dd1303dd5",
+    "com/replaymod/replaystudio/pathing/interpolation/PolynomialSplineInterpolator.java": "9648b651c1526d9ed35d9d56a7d5fdc0a064e8ede40f9f08647cbb12e32e4338",
+    "com/replaymod/replaystudio/pathing/path/Keyframe.java": "c2c44b0cfc61ad56680782f302a5d2d858c3149a5fd00596954cb1d13e18667e",
+    "com/replaymod/replaystudio/pathing/path/Path.java": "7c6135d73f8075dc85c4014bc174d0979196d5c394fae726aaf0aeca9e104970",
+    "com/replaymod/replaystudio/pathing/path/PathSegment.java": "5ecf58b59630bbcaec1071737fe9c91f1184aec7f7276b66ccf5af98eddc7e82",
+    "com/replaymod/replaystudio/pathing/path/Timeline.java": "ccd8e89b834de7ec77911810dc98569695ee40a859cce7a16bfc38cb0da649ae",
+    "com/replaymod/replaystudio/pathing/property/Property.java": "7a8a773cb5bd798789ae1048280ccea529815fa5dd5f62361e2943968a3779ce",
+    "com/replaymod/replaystudio/pathing/property/PropertyGroup.java": "4bfabd4ece6768310bac715e6f7e94bf2e6c7cb61098d600a67d79b7ffcf0cc6",
+    "com/replaymod/replaystudio/pathing/property/PropertyPart.java": "61b51a51ff3aebeedfc6a4397a85062d763098f609bb1e8e18a26771227fbf70",
+    "com/replaymod/replaystudio/pathing/property/AbstractPropertyPart.java": "b2ff26d54dccd59be6254f8043d546a7e0d8cc1d319ddc73585cfad599db10d5"
+  }
+}
