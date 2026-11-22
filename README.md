@@ -1,31 +1,137 @@
-# RongMC Client
+# RongMC 实时欢迎导览
 
-[中文](#中文) | [English](#english)
+Minecraft Java **1.21.11 / Fabric** 的欢迎导览原型。进入世界后，客户端实时渲染世界，相机按关键帧路线移动，文字与鼠标按钮叠加在画面上。无需 ReplayMod 或预先录制的视频。
 
-## 中文
+当前版本 **0.4.0-dev**。已将 0.3 实装到建筑服测试客户端与服务端，并用用户确认的真实建筑服存档副本联机验证；本机也已安装完整整合包。0.4 解除章节的机位距离限制，并支持移动相机锚点加载区块。按用户要求，正在运行的原测试服保持 0.3，不停服、不更新。
 
-本仓库发布的是 **RongMC** 对 `RongMC Client` 的 Minecraft 26.3 Fabric 移植/维护或自研版本。
+## 运镜制作
 
-- Fabric mod id：`rongmc_client`（provides：`rongmc_client`）
-- 许可证：**GNU GPL v3.0**
-- 本仓库包含完整源码（orphan 发布，Contributors 仅 ycrrongos）。
-- 部分改动由 vibecoding（AI 辅助编程）完成，并由人工审阅与测试。
-- 贡献者（Contributors）：仅 [ycrrongos](https://github.com/ycrrongos)
+已新增专门的游戏内运镜编辑器，实际复用 ReplayMod 项目 ReplayStudio 的路径核心。默认 **F8 打开/关闭、F7 记录机位**；可编辑时间轴、曲线、FOV、章节与介绍文字，实时预览、撤销重做、保存项目并导出完整导览配置。单人世界需允许命令；服务端需管理员权限。
 
-### 许可
+完整步骤见 [运镜编辑器使用说明](docs/camera-editor.md)。项目保存在 `config/rongmc-camera/projects/`，导出在 `config/rongmc-camera/exports/`，默认不自动启用或覆盖服务端配置。
 
-以 GNU General Public License v3.0 发布（见 `LICENSE`）。若上游原作另有条款，移植改动部分仍按 GPL-3.0；使用时请同时尊重上游要求。
+## 已实现
 
-## English
+- 真实世界相机路线：位置、朝向与 FOV 关键帧，真实时间驱动的缓动插值，转向走最短角度。
+- 非暂停的介绍界面：中文/英文、章节介绍、上一章/下一章、暂停/继续、跳过、开始游玩、减少动态效果；长介绍支持鼠标滚动。
+- 正式展示前读取 GPU 渲染器、CPU 线程数、JVM 堆上限、分辨率和帧率限制；先应用保守画质，再在不透明加载遮罩下采样真实世界帧耗时。硬件信息留在客户端，不上传。
+- 流畅/均衡/精细三档：结合帧耗时的 95 分位、内存压力与玩家帧率上限选择档位，考虑垂直同步及窗口失焦；也可以手动切换。播放期间只自动降档，避免视距频繁升降。
+- 临时画质会话：保留玩家原有视距上限，调整实体距离、云、粒子；结束时恢复视距、实体距离、云、粒子、HUD、视角模式及视角摇晃。导览期间阻止临时设置写入 options.txt。不自动安装或启用光影。
+- 配套服务端：发放会话、传送至章节锚点、临时旁观者保护、约束玩家操作位置，准备完成后才展示场景。返回位置、模式与飞行能力先写入恢复日志；结束、断线、正常关服时恢复，中断日志会在下一次进服时恢复。
+- 服务端按玩家 UUID 记录完成版本；首次进入或介绍版本更新时可自动展示，主动跳过也记为已处理。可用命令重新观看。
+- 并发名额、心跳及总时长上限；客户端只能发送会话标识和固定动作，不能提供任意传送坐标或执行命令。
 
-**RongMC** Minecraft 26.3 Fabric port / maintenance / original build of `RongMC Client`.
+## 在独立存档试用
 
-- Fabric mod id: `rongmc_client` (provides: `rongmc_client`)
-- License: **GNU GPL v3.0**
-- This repository includes full source (orphan publish; contributor: ycrrongos only).
-- Some changes were made with vibecoding (AI-assisted coding), then reviewed and tested by humans.
-- Contributors: only [ycrrongos](https://github.com/ycrrongos)
+```bash
+cd /data/RongMC/RongMC-Client
+./gradlew runClient
+```
 
-### License
+开发客户端的数据只放在 `run/client/`。可以打开准备好的 **RongMC 导览原型测试** 存档，或者新建一个允许命令的创造模式世界。在聊天栏输入：
 
-Released under GNU GPL v3.0 (see `LICENSE`). Respect upstream terms where applicable; RongMC changes are GPL-3.0.
+```text
+/rongmctour demo
+```
+
+这个命令只允许单人世界的管理员使用，会围绕当前玩家位置生成两段演示镜头，不修改地形，不连接生产服务器。进入后可用鼠标切换章节、暂停、调整画质、固定视角或跳过；按 Esc 也可退出导览。
+
+演示首次会显示加载与画质校准界面，然后才揭开世界画面。检测得到的是当前场景及当前游戏配置下的结果，不能保证所有建筑、光影和整合包都达到同一帧率。
+
+## 构建和测试
+
+```bash
+./gradlew build
+./gradlew genSources
+./gradlew runClientGameTest
+```
+
+`build` 包含 19 项纯逻辑测试，覆盖原有导览以及实际 ReplayStudio 插值、草稿历史、文件路径校验、备份与导出。客户端游戏测试会启动并自行关闭一个独立 Minecraft 窗口，生成并操作 `build/run/clientGameTest/` 下的测试世界，使用真实鼠标事件、客户端/服务端数据包、实际区块和渲染验证。它不会打开 `run/client/` 或生产存档。测试断言失败时，Fabric 测试框架会按失败退出客户端；详情见运行日志。
+
+游戏测试覆盖相机运动、暂停、跨 192 格的章节锚点切换、手动画质、固定视角、小窗口布局、无效会话数据包、临时 options.txt 写入防护、跳过/完成/断线恢复、持久化记录与模拟中断日志恢复，并回归首次进服和介绍版本更新行为。截图输出到 `build/run/clientGameTest/screenshots/`。
+
+产物：`build/libs/rongmc-client-0.4.0-dev.jar`。`-sources.jar` 为源码归档。
+
+工程使用 JDK 21、Gradle Wrapper 9.3.1、Loom 1.14.10、Loader 0.20.1、Fabric API 0.141.6+1.21.11 与 Mojang 官方映射。版本集中在 `gradle.properties`；Gradle Daemon 和 Java 字节码目标均固定为 Java 21。无需修改本机默认 Java 版本。
+
+首次联网下载须遵循工作区 FlClash 代理约定，特别是 Gradle 下载可能重定向到 GitHub。必要的 JVM 代理参数通过当前终端 GRADLE_OPTS / JAVA_TOOL_OPTIONS 传入，不把代理地址或凭据写进工程。
+
+## 配置真实路线
+
+同一个 Jar 包含客户端与服务端入口，Fabric 会按环境加载。正式部署需要客户端和 Fabric 服务端都安装此 Jar 及匹配的 Fabric API；只有客户端无法保证远处区块发送、玩家保护与首次观看记录。此轮没有做生产部署。
+
+服务端首次启动会生成 `config/rongmc-tour-server.json`，**默认关闭自动导览**。完整格式见 [配置示例](examples/rongmc-tour-server.json)。示例坐标只用于说明格式，不代表服务器实景位置。填好实际路线、校验后再设置 enabled=true。
+
+- `enabled`：是否允许配置的正式导览。
+- `autoStartOnFirstJoin`：进入世界后延迟约 3 秒，向未完成当前版本且装有客户端模组的玩家展示。
+- `maxConcurrent`：并发会话上限，默认 2，可配置 1–8。
+- `tour.version`：正整数，更新后可重新向已完成旧版本的玩家展示。
+- `tour.chapters`：每章包含 id、标题、完整介绍、维度、玩家锚点与镜头关键帧。
+
+锚点坐标是玩家脚部位置；镜头关键帧坐标是相机眼睛位置。时间以秒计，首关键帧必须为 0，之后严格递增。yaw/pitch 遵循 Minecraft 角度，正 pitch 朝下，FOV 单位为度。
+
+章节不再限制机位到锚点的水平距离或垂直落差，样条保留实际形状。最多 16 章、总共 128 个关键帧，每章最多 180 秒、总计最多 900 秒。位置必须有限且处于 Minecraft 绝对坐标和服务端世界边界内，FOV 为 30–100，pitch 为 -85–85。新版服务端按已验证路径上的时间位置移动观测点，分批加载路线区块，客户端在区块和渲染网格准备时暂停并覆盖画面。
+
+跨区域时先遮住画面，由服务端把玩家锚点移到下一章，等客户端收到所需区块且渲染队列稳定后再展示。只在服务端强制加载区块，不能代替向该玩家发送区块；原型不绕过服务器视距上限。加载超过 30 秒会显示重试/退出入口。
+
+服务端命令：
+
+```text
+/rongmctour           重新观看已配置的介绍
+/rongmctour reload    校验并载入配置（管理员）
+/rongmctour status    查看会话和恢复状态（管理员）
+/rongmctour demo      单人管理员的当前位置演示
+```
+
+reload 验证失败会保留已有配置，不应用错误的新配置。活动会话持有自己的路线，不会在中途被配置热更新改写。
+
+持久化文件为各存档根目录的 `rongmc-tour-state.json`，包含完成版本与中断返回记录。恢复记录先于临时模式/位置改动落盘；恢复文件无法读取时停止初始化导览，不覆盖原始记录。
+
+有登录/认证模组的服务器应先关闭 autoStartOnFirstJoin，待认证完成后触发导览。当前延迟启动不等于认证完成检查，尚未接入具体登录模组。
+
+## 范围与限制
+
+当前已实现可运行原型，正式建筑选点和介绍文案仍需制作。0.3 已验证实际整合包的 Sodium/Iris（未开光影）组合；尚未宣称兼容所有光影与自由视角模组。性能不足时可以手动选低档、固定视角或跳过，不会自动降低系统屏幕分辨率或改写光影配置。
+
+本机缺少可选的 flite 语音旁白库，Minecraft 启动会记录旁白初始化错误；这不妨碍导览渲染。Fabric 测试默认设置另有各向异性过滤值提示，测试日志中需与导览模块的错误区分。构建工具当前还存在上游弃用提示，固定 Gradle 9.3.1 使用。
+
+敏感信息仍从工作区既有的 `RongMC_on_Oneplus12/.agent/info-request.txt` 运行时获取；本原型使用 Minecraft 现有连接，不新增 HTTP 服务、不需要填写地址或端口。
+
+## 源码位置
+
+- `src/main/java/dev/rongmc/tour/`：路线格式、插值、画质策略、数据包与服务端入口。
+- `src/main/java/dev/rongmc/tour/server/`：会话、锚点、保护、持久化和恢复。
+- `src/client/java/dev/rongmc/client/tour/`：设备预检、临时设置、状态机和界面。
+- `src/client/java/dev/rongmc/client/mixin/`：相机、FOV、按键与设置保存钩子。
+- `src/client/java/dev/rongmc/client/editor/` 与 `src/main/java/dev/rongmc/tour/editor/`：运镜界面、取景、时间轴、草稿和导出。
+- `third_party/replaystudio-pathing/`：固定上游版本的 ReplayStudio 路径核心、许可证、源文件哈希及独立构建。
+- `src/test/` 与 `src/gametest/`：纯逻辑及真实客户端/服务端回归；测试模组不进入发布 Jar。
+
+参考：[Fabric 1.21.11 开发说明](https://fabricmc.net/2025/12/05/12111.html)、[自定义 Screen](https://docs.fabricmc.net/1.21.11/develop/rendering/gui/custom-screens)、[联网 API](https://docs.fabricmc.net/1.21.11/develop/networking)、[客户端测试](https://docs.fabricmc.net/1.21.11/develop/automatic-testing)、[ReplayMod 相机路线](https://www.replaymod.com/docs/#replaying-paths)。
+
+## 最近一次验证
+
+2026-11-09 21:41（Australia/Perth）：`build runClientGameTest` 成功，8 项单元测试零失败；真实客户端/内置服务端测试完整结束并正常关闭窗口，未发现导览模块线程错误。首次版本升级触发、跳过与完成、断线、存档重开及恢复日志均已回归。测试配置已恢复为关闭状态。
+
+截图来自实际测试世界：
+
+![独立测试世界中的实时导览](docs/screenshots/live-intro.png)
+
+实际建筑服测试包与存档副本的验证记录见 [远端实装说明](docs/remote-deployment-2026-11-09.md)。原生产存档没有被测试进程打开；登录模组只在隔离测试服禁用。
+
+## 0.3 运镜编辑器验证
+
+2026-11-09 22:46（Australia/Perth）：19 项单元测试通过，编辑器与原有欢迎导览的两组客户端 GameTest 完整通过，窗口正常退出。最后一次离线 build 也通过；仅使用最终 Jar 的独立插值探针通过。分发库已隔离命名空间，保留 20 个原始源文件的哈希、许可证、对应源码与重链接说明。
+
+默认按 F8 打开，F7 记录。已准备的单人示例：打开“RongMC 导览原型测试”存档，F8 后把项目名改为 `preview`，载入并播放。
+
+![实际运镜编辑器](docs/screenshots/camera-editor.png)
+
+---
+
+## 发布信息
+
+- Fabric id：`rongmc_client`
+- 目标：Minecraft 26.3 Fabric
+- 许可：GPL-3.0（见 `LICENSE`）
+- 构建产物见 Releases
