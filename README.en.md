@@ -1,42 +1,30 @@
-# RongMC Client and Live Tours
+# RongMC Live Welcome Tours
 
 [简体中文](./README.md) · English
 
-Plays camera tours through the live Minecraft world using keyframes. Players can pause, skip or complete a tour from the overlay. The repository also contains the modpack’s first-run device setup code.
 
-## Download and installation
+Welcome players with a camera tour through the world they just joined. The camera follows keyframes through live Minecraft scenes while an interactive overlay shows captions and chapter controls. The tour runs without a prerecorded video.
 
-- Version · [v0.4.0-dev+26.3](https://github.com/OpenRongMC/RongMC-Client/releases/tag/v0.4.0-dev%2B26.3) (Prerelease)
-- Release asset · `rongmc-client-0.4.0-dev.26.3.jar`
-- Runtime · Minecraft Java 26.3, Fabric, Java 25
-- Fabric Loader · `>=0.18.4`
-- Fabric mod ID · `rongmc_client`
-- Dependencies declared by the JAR · [Fabric API](https://modrinth.com/mod/fabric-api)
+## What changed in the RongMC 26.3 port
 
-Place the release JAR in the instance’s `mods/` directory. Client-side setup needs the optional-mod catalog supplied by the pack. For server-managed tours, use compatible copies on both sides. GitHub prereleases and pack-bundled builds may differ, so check the release tag.
+The 26.3 port retains ReplayStudio camera editing and multiplayer tours. Pack builds offer five first-run device tiers. Newer builds can enable touch controls and skip Spatial GUI when touch is selected. Available options depend on the pack build.
 
-## How to try it
+## Installation
 
-Record sample keyframes in creative or spectator mode with F7, and open the editor with F8 or /rongmctour editor. Try /rongmctour in multiplayer and check that completing or skipping restores the camera and player position.
+Download **v0.4.0-dev+26.3** from [GitHub Releases](https://github.com/OpenRongMC/RongMC-Client/releases/tag/v0.4.0-dev%2B26.3) for Minecraft Java **26.3** on **Fabric** with **Java 25**. Dependencies include [Fabric API](https://modrinth.com/mod/fabric-api). Place the release JAR in the instance’s `mods/` directory. Client-side setup needs the optional-mod catalog supplied by the pack. For server-managed tours, use compatible copies on both sides. GitHub prereleases and pack-bundled builds may differ, so check the release tag.
 
-## First-run device setup
+## Create a tour in game
 
-The RongMC low-spec pack starts with the minimum tier. Choosing a higher tier enables more optional mods on restart. Newer pack builds with the touch-control option skip Spatial GUI when touch control is enabled.
+The editor uses ReplayStudio pathing. Press **F7** to record a camera position and **F8** to open the editor, or use `/rongmctour editor`. Edit timing, curves, FOV, chapters and captions, then preview or export the route. See the [camera editor guide](./docs/camera-editor.md). Source projects are kept in `config/rongmc-camera/projects/`, with exports under `config/rongmc-camera/exports/`.
 
-## Working from source
+## Playing a tour
 
-```sh
-./gradlew build
-```
+The overlay supports chapters, previous and next controls, pause, resume, skip and reduced motion. The client can use temporary rendering settings for the tour and restores the player's options afterward. The server moves players to scene anchors, prepares chunks and records a recovery position before starting. Tour completion is saved by player and version.
 
-Test tour changes in an isolated client and dedicated server.
+## Try it in a test world
 
-## Documentation and support
+Use `/rongmctour demo` as an administrator in a single-player creative world with commands enabled. For multiplayer, install the mod and matching Fabric API on both sides. Start with the [sample configuration](./examples/rongmc-tour-server.json), set the real scene coordinates, then configure `config/rongmc-tour-server.json`. The generated server configuration starts with automatic tours disabled.
 
-- [Camera editor guide](./docs/camera-editor.md) · [Server configuration example](./examples/rongmc-tour-server.json)
-- [Previous README (historical guide, contributors and credits)](https://github.com/OpenRongMC/RongMC-Client/blob/d18a93fcf19a2670580aeb30fcfafddca068876a/README.md)
-- [Report a RongMC port issue](https://github.com/OpenRongMC/RongMC-Client/issues) · Include the game version, client and server JAR names, reproduction steps and relevant logs.
+## Building
 
-## License and credits
-
-See this repository’s [LICENSE](./LICENSE) and the original project’s license, credits and third-party asset notices.
+Use JDK 25. Run `./gradlew build` for the archive, or `./gradlew runClient` to open a development client. See [LICENSE](./LICENSE) for project licensing.
